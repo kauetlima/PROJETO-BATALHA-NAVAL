@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Text;
 Console.OutputEncoding = Encoding.UTF8; // Para aceitar o caracter □
@@ -26,10 +27,10 @@ void PopulaTabuleiro(string[,] tabuleiro)
         for (int coluna = 0; coluna < 10; coluna++)
         {
             tabuleiro[linha, coluna] = "□";
-            Console.Write($"[{tabuleiro[linha, coluna]}]");
+           Console.Write($"[{tabuleiro[linha, coluna]}]");
 
         }
-        Console.WriteLine();
+       Console.WriteLine();
     }
 }
 string MenuEscolha()
@@ -329,11 +330,14 @@ bool ValidaEspacoVazioVertical(string[,] tabuleiro, int linhaPeca, int colunaPec
 
 void LugarPecaPosicaoPecaComputador(string[,] tabuleiro)
 {
-        for (int j = 0; j < 4; j++)
-        {
+    for (int j = 0; j < 4; j++)
+    {
 
         MenuEscolhaComputador();
-            contador++;
+        contador++;
+        bool posicionou = false;
+        do
+        {
             sentidopeca = RandomNumberGenerator.GetInt32(1, 3);
             linhaPeca = RandomNumberGenerator.GetInt32(1, 10);
             colunaPeca = RandomNumberGenerator.GetInt32(1, 10);
@@ -342,20 +346,21 @@ void LugarPecaPosicaoPecaComputador(string[,] tabuleiro)
             if (sentidopeca == 1)
             {
 
-            ValidacaoPecaHorizontalComputador(tabuleiro, colunaPeca, linhaPeca, tamanhoPeca);
+                posicionou = ValidacaoPecaHorizontalComputador(tabuleiro, colunaPeca, linhaPeca, tamanhoPeca); 
 
             }
             else
             {
 
-            ValidacaoPecaVerticalComputador(tabuleiro, colunaPeca, linhaPeca, tamanhoPeca);
+                posicionou = ValidacaoPecaVerticalComputador(tabuleiro, colunaPeca, linhaPeca, tamanhoPeca);
 
             }
-        }
+        } while (posicionou == false); //Enquanto Posicionou for false ele continua rodando 
+    }
 }
-void ValidacaoPecaHorizontalComputador(string[,] tabuleiro, int colunaPeca, int linhaPeca, int tamanhoPeca)
+bool ValidacaoPecaHorizontalComputador(string[,] tabuleiro, int colunaPeca, int linhaPeca, int tamanhoPeca)
 {
-        menu = RandomNumberGenerator.GetInt32(1, 3);
+    menu = RandomNumberGenerator.GetInt32(1, 3);
 
     if (ValidaEspacoVazioHorizontal(tabuleiro, linhaPeca, colunaPeca, tamanhoPeca))
     {
@@ -376,17 +381,18 @@ void ValidacaoPecaHorizontalComputador(string[,] tabuleiro, int colunaPeca, int 
                 tabuleiro[linhaPeca, i] = "x";
             }
         }
+        return true;
     }
     else
     {
-        ValidacaoPecaHorizontalComputador(tabuleiro, colunaPeca, linhaPeca, tamanhoPeca);
+        return false;
     }
 }
-void ValidacaoPecaVerticalComputador(string[,] tabuleiro, int colunaPeca, int linhaPeca, int tamanhoPeca)
+bool ValidacaoPecaVerticalComputador(string[,] tabuleiro, int colunaPeca, int linhaPeca, int tamanhoPeca)
 {
-        menu = RandomNumberGenerator.GetInt32(1, 3);
+    menu = RandomNumberGenerator.GetInt32(1, 3);
 
-        if (ValidaEspacoVazioVertical(tabuleiro, linhaPeca, colunaPeca, tamanhoPeca))
+    if (ValidaEspacoVazioVertical(tabuleiro, linhaPeca, colunaPeca, tamanhoPeca))
     {
         if (menu == 1)
         {
@@ -405,59 +411,63 @@ void ValidacaoPecaVerticalComputador(string[,] tabuleiro, int colunaPeca, int li
                 tabuleiro[i, colunaPeca] = "x";
             }
         }
+        return true;
     }
     else
     {
-
-        ValidacaoPecaVerticalComputador(tabuleiro, colunaPeca, linhaPeca, tamanhoPeca);
+ 
+        return false;
     }
 }
-string MenuEscolhaComputador() 
+string MenuEscolhaComputador()
 
-    {
-        tamanhoPeca = 0;
-        menu = 0;
-        menu = RandomNumberGenerator.GetInt32(1, 4);
+{
+    tamanhoPeca = 0;
+    menu = 0;
+    menu = RandomNumberGenerator.GetInt32(1, 5);
 
 
     for (int i = 0; i < contador; i++)
+    {
+        if (valorMenu[i] == menu)
         {
-            if (valorMenu[i] == menu)
-            {
 
-                return MenuEscolhaComputador();
-
-            }
-        }
-
-        valorMenu[contador] = menu;
-
-        switch (menu)
-        {
-            case 1:
-                tamanhoPeca = 5;
-                return tipoPeca = "Porta Aviões";
-
-            case 2:
-                tamanhoPeca = 4;
-                return tipoPeca = "Navio-Tanque";
-
-            case 3:
-                tamanhoPeca = 3;
-                return tipoPeca = "Submarino";
-
-            case 4:
-                tamanhoPeca = 2;
-                return tipoPeca = "Contratorpedeiro";
-
-            default:
-                return MenuEscolhaComputador();
+            return MenuEscolhaComputador();
 
         }
     }
 
+    valorMenu[contador] = menu;
+
+    switch (menu)
+    {
+        case 1:
+            tamanhoPeca = 5;
+            return tipoPeca = "Porta Aviões";
+
+        case 2:
+            tamanhoPeca = 4;
+            return tipoPeca = "Navio-Tanque";
+
+        case 3:
+            tamanhoPeca = 3;
+            return tipoPeca = "Submarino";
+
+        case 4:
+            tamanhoPeca = 2;
+            return tipoPeca = "Contratorpedeiro";
+
+        default:
+            return MenuEscolhaComputador();
+
+    }
+}
 
 
+void AtaqueJogador() 
+{
+    Console.WriteLine("Qual Posição deseja atacar ?");
+}
 
 void TabuleiroComputador()
 {
@@ -465,14 +475,21 @@ void TabuleiroComputador()
     LugarPecaPosicaoPecaComputador(tabuleiro2);
     ImprimeTabuleiro(tabuleiro2);
 }
+void TabuleiroJogador()
+{
+    PopulaTabuleiro(tabuleiro1);
+    LugarPecaPosicaoPeca(tabuleiro1);
+}
 
+TabuleiroJogador();
 TabuleiroComputador();
-//PopulaTabuleiro(tabuleiro1);
-//LugarPecaPosicaoPeca(tabuleiro1);
 
 
-//PopulaTabuleiro(tabuleiro2);
-//LugarPecaPosicaoPeca(tabuleiro2);
+
+
+
+
+
 
 
 
