@@ -28,6 +28,9 @@ string tipoPeca = string.Empty;
 
 void PopulaTabuleiro(string[,] tabuleiro)
 {
+    Console.WriteLine("=====================================");
+    Console.WriteLine("             TABULEIRO");
+    Console.WriteLine("=====================================");
     for (int linha = 0; linha < 10; linha++)
     {
         for (int coluna = 0; coluna < 10; coluna++)
@@ -40,15 +43,17 @@ void PopulaTabuleiro(string[,] tabuleiro)
     }
     Console.WriteLine("\n");
 }
-void PopulaMarcador(string[,] tabuleiro)
+void PopulaMarcador(string[,] marcador)
 {
-    Console.WriteLine("\n");
+    Console.WriteLine("=====================================");
+    Console.WriteLine("               MARCADOR");
+    Console.WriteLine("=====================================");
     for (int linha = 0; linha < 10; linha++)
     {
         for (int coluna = 0; coluna < 10; coluna++)
         {
-            tabuleiro[linha, coluna] = "[  ]";
-            Console.Write($"[{tabuleiro[linha, coluna]}]");
+            marcador[linha, coluna] = " ";
+            Console.Write($"[{marcador[linha, coluna]}]");
 
         }
         Console.WriteLine();
@@ -57,6 +62,9 @@ void PopulaMarcador(string[,] tabuleiro)
 }
 void ImprimeTabuleiro(string[,] tabuleiro)
 {
+    Console.WriteLine("=====================================");
+    Console.WriteLine("             TABULEIRO");
+    Console.WriteLine("=====================================");
     for (int linha = 0; linha < 10; linha++)
     {
         for (int coluna = 0; coluna < 10; coluna++)
@@ -65,6 +73,22 @@ void ImprimeTabuleiro(string[,] tabuleiro)
         }
         Console.WriteLine();
     }
+    Console.WriteLine();
+}
+void ImprimeMarcador(string[,] marcador)
+{
+    Console.WriteLine("=====================================");
+    Console.WriteLine("               MARCADOR");
+    Console.WriteLine("=====================================");
+    for (int linha = 0; linha < 10; linha++)
+    {
+        for (int coluna = 0; coluna < 10; coluna++)
+        {
+            Console.Write($"[{marcador[linha, coluna]}]");
+        }
+        Console.WriteLine();
+    }
+    Console.WriteLine();
 }
 void BordaTabuleiro(int[,] posicaoMatriz)
 {
@@ -569,11 +593,11 @@ bool AtaqueJogador1(string[,] tabuleiro, string[,] marcador)
     if (VerificaBarcos(tabuleiro))
     {
         ImprimeTabuleiro(tabuleiro1);
-        ImprimeTabuleiro(marcador);
+        ImprimeMarcador(marcador);
         Console.WriteLine("Qual Posição deseja atacar ?");
-        Console.WriteLine("LINHA:");
+        Console.Write("LINHA: ");
         ataqueLinha = int.Parse(Console.ReadLine());
-        Console.WriteLine("COLUNA:");
+        Console.Write("COLUNA: ");
         ataqueColuna = int.Parse(Console.ReadLine());
         Console.Clear();
 
@@ -587,6 +611,7 @@ bool AtaqueJogador1(string[,] tabuleiro, string[,] marcador)
         else if (marcador[ataqueLinha, ataqueColuna] == "B" || marcador[ataqueLinha, ataqueColuna] == "A")
         {
             Console.WriteLine("Você já atacou essa posição");
+            Console.ReadKey();
             return AtaqueJogador1(tabuleiro, marcador);
         }
         else if (VerificaAtaque(tabuleiro, marcador, ataqueLinha, ataqueColuna))
@@ -595,21 +620,19 @@ bool AtaqueJogador1(string[,] tabuleiro, string[,] marcador)
             marcador[ataqueLinha, ataqueColuna] = "B";
             tabuleiro[ataqueLinha, ataqueColuna] = "B";
             ImprimeTabuleiro(tabuleiro1);
-            ImprimeTabuleiro(marcador);
+            ImprimeMarcador(marcador);
         }
         else
         {
             Console.WriteLine("ÁGUA");
             marcador[ataqueLinha, ataqueColuna] = "A";
             ImprimeTabuleiro(tabuleiro1);
-            ImprimeTabuleiro(marcador);
+            ImprimeMarcador(marcador);
         }
 
         if (!VerificaBarcos(tabuleiro))
         {
             Console.WriteLine("VOCÊ VENCEU");
-            ImprimeTabuleiro(tabuleiro1);
-            ImprimeTabuleiro(marcador);
             return true;
         }
     }
@@ -653,39 +676,40 @@ bool AtaqueJogador2(string[,] tabuleiro, string[,] marcador)
 
 void TabuleiroComputador()
 {
+    PopulaMarcador(marcador2);
     PopulaTabuleiro(tabuleiro2);
     LugarPecaPosicaoPecaComputador(tabuleiro2);
-    ImprimeTabuleiro(tabuleiro2);
+
 }
 void TabuleiroJogador()
 {
+    PopulaMarcador(marcador1);
     PopulaTabuleiro(tabuleiro1);
     LugarPecaPosicaoPeca(tabuleiro1);
 }
 
-//TabuleiroJogador();
-//TabuleiroComputador();
+TabuleiroJogador();
+TabuleiroComputador();
 
-//do
-//{
-//    Console.Clear();
-//    jogador1 = false;
-//    jogador2 = false;
+do
+{
+    Console.Clear();
+    jogador1 = false;
+    jogador2 = false;
 
-//    jogador1 = AtaqueJogador1(tabuleiro2, marcador1);
+    jogador1 = AtaqueJogador1(tabuleiro2, marcador1);
 
 
-//    if (jogador1 == true)
-//    {
-//        break;
-//    }
+    if (jogador1 == true)
+    {
+        break;
+    }
 
-//    jogador2 = AtaqueJogador2(tabuleiro1, marcador2);
-//}
-//while (jogador1 == false && jogador2 == false);
+    jogador2 = AtaqueJogador2(tabuleiro1, marcador2);
+}
+while (jogador1 == false && jogador2 == false);
 
-PopulaTabuleiro(tabuleiro1);
-BordaTabuleiro(posicaoMatriz);
+
 
 
 
