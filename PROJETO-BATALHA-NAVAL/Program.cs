@@ -13,6 +13,8 @@ string[,] marcador1 = new string[10, 10];
 string[,] marcador2 = new string[10, 10];
 int[] valorMenu = new int[4];
 int[,] posicaoMatriz = new int[11, 11];
+int[] teste = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
 
 
 bool jogador1 = false;
@@ -23,33 +25,35 @@ int tamanhoPeca = 0;
 int menu = 0;
 int contador = 0;
 int sentidopeca = 0;
-int jogador = 0;
 string tipoPeca = string.Empty;
 
 void PopulaTabuleiro(string[,] tabuleiro)
 {
-    Console.WriteLine("=====================================");
-    Console.WriteLine("             TABULEIRO");
-    Console.WriteLine("=====================================");
     for (int linha = 0; linha < 10; linha++)
     {
         for (int coluna = 0; coluna < 10; coluna++)
         {
             tabuleiro[linha, coluna] = "□";
-            Console.Write($"[{tabuleiro[linha, coluna]}]");
 
         }
-        Console.WriteLine();
     }
-    Console.WriteLine("\n");
 }
 void PopulaMarcador(string[,] marcador)
 {
     Console.WriteLine("=====================================");
     Console.WriteLine("               MARCADOR");
     Console.WriteLine("=====================================");
+
+    for (int coluna = 0; coluna < 11; coluna++)
+    {
+        Console.Write($"[{teste[coluna]}]");
+    }
+    Console.WriteLine();
     for (int linha = 0; linha < 10; linha++)
     {
+
+        Console.Write($"[{teste[linha]}]");
+
         for (int coluna = 0; coluna < 10; coluna++)
         {
             marcador[linha, coluna] = " ";
@@ -65,8 +69,16 @@ void ImprimeTabuleiro(string[,] tabuleiro)
     Console.WriteLine("=====================================");
     Console.WriteLine("             TABULEIRO");
     Console.WriteLine("=====================================");
+
+    for (int coluna = 0; coluna < 11; coluna++)
+    {
+        Console.Write($"[{teste[coluna]}]");
+    }
+    Console.WriteLine();
     for (int linha = 0; linha < 10; linha++)
     {
+        Console.Write($"[{teste[linha]+1}]");
+
         for (int coluna = 0; coluna < 10; coluna++)
         {
             Console.Write($"[{tabuleiro[linha, coluna]}]");
@@ -84,35 +96,13 @@ void ImprimeMarcador(string[,] marcador)
     {
         for (int coluna = 0; coluna < 10; coluna++)
         {
+            
             Console.Write($"[{marcador[linha, coluna]}]");
         }
         Console.WriteLine();
     }
     Console.WriteLine();
 }
-void BordaTabuleiro(int[,] posicaoMatriz)
-{
-    for (int linha = 0; linha < 1; linha++)
-    {
-        for (int coluna = 0; coluna < 11; coluna++)
-        {
-            posicaoMatriz[linha, coluna] = coluna;
-    
-        }
-        
-    }
-    for (int coluna = 0; coluna < 1; coluna++)
-    {
-        for (int linha = 1; linha < 11; linha++)
-        {
-            posicaoMatriz[linha, coluna] = linha;
-            
-            
-        }
-
-    }
-    
-} 
 
 string MenuEscolha(int[] valorMenu)
 {
@@ -679,6 +669,7 @@ void TabuleiroComputador()
 {
     PopulaMarcador(marcador2);
     PopulaTabuleiro(tabuleiro2);
+    ImprimeTabuleiro(tabuleiro2);
     LugarPecaPosicaoPecaComputador(tabuleiro2);
 
 }
@@ -686,8 +677,12 @@ void TabuleiroJogador()
 {
     PopulaMarcador(marcador1);
     PopulaTabuleiro(tabuleiro1);
+    ImprimeTabuleiro(tabuleiro1);
     LugarPecaPosicaoPeca(tabuleiro1);
 }
+
+
+
 
 TabuleiroJogador();
 TabuleiroComputador();
