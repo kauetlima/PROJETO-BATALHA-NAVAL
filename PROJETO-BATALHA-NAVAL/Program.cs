@@ -126,7 +126,7 @@ string MenuEscolha(int[] valorMenu)
         "\n 1 - PORTA AVIÕES (TAMANHO 5)" +
         "\n 2 - NAVIO TANQUE (TAMANHO 4)" +
         "\n 3 - SUBMARINO (TAMANHO 3)" +
-        "\n 4 - CONTRA-TORPEDEIRO (TAMANHO 1)");
+        "\n 4 - CONTRA-TORPEDEIRO (TAMANHO 2)");
     Console.Write("-> ");
 
     menu = int.Parse(Console.ReadLine());
@@ -596,6 +596,7 @@ bool AtaqueJogador1(string[,] tabuleiro, string[,] marcador)
         ImprimeMarcador(marcador);
         Console.WriteLine("Qual Posição deseja atacar ?");
         Console.Write("LINHA: ");
+        
         ataqueLinha = int.Parse(Console.ReadLine());
         Console.Write("COLUNA: ");
         ataqueColuna = int.Parse(Console.ReadLine());
