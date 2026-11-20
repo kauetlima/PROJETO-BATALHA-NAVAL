@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 Console.OutputEncoding = Encoding.UTF8; // Para aceitar o caracter □
 
-
+//teste
 
 string[,] tabuleiro1 = new string[10, 10];
 string[,] tabuleiro2 = new string[10, 10];
