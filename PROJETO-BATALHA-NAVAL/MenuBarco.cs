@@ -28,18 +28,22 @@
         switch (opcaoMenu)
         {
             case 1:
+                this.OpcaoMenu = opcaoMenu;
                 barco = new Barco(5, "Porta Aviões");
                 break;
 
             case 2:
+                this.OpcaoMenu = opcaoMenu;
                 barco = new Barco(4, "Navio Tanque");
                 break;
 
             case 3:
+                this.OpcaoMenu = opcaoMenu;
                 barco = new Barco(3, "Submarino");
                 break;
 
             case 4:
+                this.OpcaoMenu = opcaoMenu;
                 barco = new Barco(2, "Contra-Torpedeiro");
                 break;
 

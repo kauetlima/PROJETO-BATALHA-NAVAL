@@ -26,7 +26,10 @@ int menu = 0;
 int contador = 0;
 int sentidopeca = 0;
 string tipoPeca = string.Empty;
+
+
 MenuBarco menuBarco = new MenuBarco(0);
+Tabuleiro tabuleiroJogo = new Tabuleiro();
 
 void PopulaTabuleiro(string[,] tabuleiro)
 {
@@ -139,104 +142,143 @@ Barco MenuEscolha()
 }
 
 
-List<Barco> barcosEscolhidos = new List<Barco>();
-Barco barco = MenuEscolha();
-barcosEscolhidos.Add(barco);
-
-void LugarPecaPosicaoPeca(string[,] tabuleiro)
+for (int j = 0; j < 4; j++)
 {
-    //FUNÇÃO IMPRESSÃO ESCOLHA POSIÇÃO ↓ (PROPRIA FUNÇÃO, NÃO ESTÁ CHAMANDO)
-    void ImpressaoEscolhePosicao(string tipoPeca)
+    Barco barco = MenuEscolha();
+
+    bool posicionou = false;
+
+    do
     {
-        Console.Clear();
-        Console.WriteLine("====================================");
-        Console.WriteLine($" POSICIONAR {tipoPeca}");
-        Console.WriteLine("====================================");
-        Console.WriteLine();
-        Console.WriteLine("Informe a posição inicial do navio.");
-        Console.WriteLine();
-        Console.WriteLine("Exemplo:");
-        Console.WriteLine("LINHA: 9");
-        Console.WriteLine("COLUNA: 10");
-        Console.Write("Digite as coordenadas (Linha | Coluna): ");
-        Console.WriteLine();
-    }
-
-
-
-    for (int j = 0; j < 4; j++)
-    {
-
-        MenuEscolha();
-        Console.Clear();
-
-        bool posicionou = false;
-
-        do
+        Console.WriteLine("Deseja posicionar o barco na horizontal ou vertical ?");
+        if (int.TryParse(Console.ReadLine(), out int opcaoMenu))
         {
-            Console.Clear();
-            ImprimeTabuleiro(tabuleiro);
-            Console.WriteLine();
-            Console.Write($"\nVocê irá posicionar o Posicionar o {tipoPeca} colocar na \n Digite 1 - HORIZONTAL \n Digite 2 - VERTICAL  \n-> ");
-            sentidopeca = int.Parse(Console.ReadLine());
+            barco = menuBarco.BarcoMenu(opcaoMenu);
+        }
+        else
+        {
+            Console.WriteLine("Digite um número válido!");
+        }
+
+        MenuPosicionar menuPosicionar = new MenuPosicionar(opcaoMenu);
+
+        Console.WriteLine("Digite a linha que deseja posicionar:");
+        menuPosicionar.Linha = int.Parse(Console.ReadLine());
+        Console.WriteLine("Digite a coluna que deseja posicionar:");
+        menuPosicionar.Coluna = int.Parse(Console.ReadLine());
+        Console.WriteLine("Deseja Posicionar a peça para direita ou esquerda?");
+        int opcaoMenuSentido = int.Parse(Console.ReadLine());
+
+        posicionou = menuPosicionar.CoordenadaPeca(barco, tabuleiroJogo, menuPosicionar, opcaoMenuSentido);
 
 
-            if (sentidopeca == 1)
-            {
-                ImpressaoEscolhePosicao(tipoPeca);
-                ImprimeTabuleiro(tabuleiro);
-                Console.WriteLine("\n");
-                Console.Write("LINHA: ");
-                int linha = int.Parse(Console.ReadLine());
+        if (posicionou)
+        {
+            Console.WriteLine("Barco posicionado com sucesso!");
+        }
+        else
+        {
+            Console.WriteLine("Não foi possível posicionar o barco. Tente novamente.");
+        }
+    } while (posicionou == false);
 
-                Console.Write("COLUNA: ");
-                int coluna = int.Parse(Console.ReadLine());
-
-
-                int[] armazenaPosicao = { linha, coluna };
-
-                linhaPeca = linha;
-                colunaPeca = coluna;
-
-                colunaPeca = colunaPeca - 1;
-                linhaPeca = linhaPeca - 1;
-
-                posicionou = ValidacaoPecaHorizontal(tabuleiro, colunaPeca, linhaPeca, tamanhoPeca, menu);
-                ImprimeTabuleiro(tabuleiro);
-            }
-            else
-            {
-                ImpressaoEscolhePosicao(tipoPeca);
-                ImprimeTabuleiro(tabuleiro);
-
-
-                Console.Write("LINHA: ");
-                int linha = int.Parse(Console.ReadLine());
-
-                Console.Write("COLUNA: ");
-                int coluna = int.Parse(Console.ReadLine());
-
-                ImprimeTabuleiro(tabuleiro);
-
-
-                int[] armazenaPosicao = { linha, coluna };
-
-                linhaPeca = linha;
-                colunaPeca = coluna;
-
-                colunaPeca = colunaPeca - 1;
-                linhaPeca = linhaPeca - 1;
-
-                posicionou = ValidacaoPecaVertical(tabuleiro, colunaPeca, linhaPeca, tamanhoPeca, menu);
-                ImprimeTabuleiro(tabuleiro);
-            }
-        } while (posicionou == false);
-
-        valorMenu[contador] = menu;
-        contador++;
-    }
-
+    menuBarco.RegistrarBarco(menuBarco.OpcaoMenu);
 }
+
+    //    void LugarPecaPosicaoPeca(string[,] tabuleiro)
+    //{
+    //    //FUNÇÃO IMPRESSÃO ESCOLHA POSIÇÃO ↓ (PROPRIA FUNÇÃO, NÃO ESTÁ CHAMANDO)
+    //    void ImpressaoEscolhePosicao(string tipoPeca)
+    //    {
+    //        Console.Clear();
+    //        Console.WriteLine("====================================");
+    //        Console.WriteLine($" POSICIONAR {tipoPeca}");
+    //        Console.WriteLine("====================================");
+    //        Console.WriteLine();
+    //        Console.WriteLine("Informe a posição inicial do navio.");
+    //        Console.WriteLine();
+    //        Console.WriteLine("Exemplo:");
+    //        Console.WriteLine("LINHA: 9");
+    //        Console.WriteLine("COLUNA: 10");
+    //        Console.Write("Digite as coordenadas (Linha | Coluna): ");
+    //        Console.WriteLine();
+    //    }
+
+
+
+    //for (int j = 0; j < 4; j++)
+    //{
+
+
+    //    Console.Clear();
+
+    //    bool posicionou = false;
+
+    //    do
+    //    {
+    //        Console.Clear();
+    //        ImprimeTabuleiro(tabuleiro);
+    //        Console.WriteLine();
+    //        Console.Write($"\nVocê irá posicionar o Posicionar o {tipoPeca} colocar na \n Digite 1 - HORIZONTAL \n Digite 2 - VERTICAL  \n-> ");
+    //        sentidopeca = int.Parse(Console.ReadLine());
+
+
+    //        if (sentidopeca == 1)
+    //        {
+    //            ImpressaoEscolhePosicao(tipoPeca);
+    //            ImprimeTabuleiro(tabuleiro);
+    //            Console.WriteLine("\n");
+    //            Console.Write("LINHA: ");
+    //            int linha = int.Parse(Console.ReadLine());
+
+    //            Console.Write("COLUNA: ");
+    //            int coluna = int.Parse(Console.ReadLine());
+
+
+    //            int[] armazenaPosicao = { linha, coluna };
+
+    //            linhaPeca = linha;
+    //            colunaPeca = coluna;
+
+    //            colunaPeca = colunaPeca - 1;
+    //            linhaPeca = linhaPeca - 1;
+
+    //            posicionou = ValidacaoPecaHorizontal(tabuleiro, colunaPeca, linhaPeca, tamanhoPeca, menu);
+    //            ImprimeTabuleiro(tabuleiro);
+    //        }
+    //        else
+    //        {
+    //            ImpressaoEscolhePosicao(tipoPeca);
+    //            ImprimeTabuleiro(tabuleiro);
+
+
+    //            Console.Write("LINHA: ");
+    //            int linha = int.Parse(Console.ReadLine());
+
+    //            Console.Write("COLUNA: ");
+    //            int coluna = int.Parse(Console.ReadLine());
+
+    //            ImprimeTabuleiro(tabuleiro);
+
+
+    //            int[] armazenaPosicao = { linha, coluna };
+
+    //            linhaPeca = linha;
+    //            colunaPeca = coluna;
+
+    //            colunaPeca = colunaPeca - 1;
+    //            linhaPeca = linhaPeca - 1;
+
+    //            posicionou = ValidacaoPecaVertical(tabuleiro, colunaPeca, linhaPeca, tamanhoPeca, menu);
+    //            ImprimeTabuleiro(tabuleiro);
+    //        }
+    //    } while (posicionou == false);
+
+    //    valorMenu[contador] = menu;
+    //    contador++;
+    //}
+
+//}
 bool ValidacaoPecaHorizontal(string[,] tabuleiro, int colunaPeca, int linhaPeca, int tamanhoPeca, int menu)
 {
     do
@@ -265,47 +307,6 @@ bool ValidacaoPecaHorizontal(string[,] tabuleiro, int colunaPeca, int linhaPeca,
             for (int i = colunaPeca; i > limiteEsquerda; i--)
             {
                 tabuleiro[linhaPeca, i] = "x";
-            }
-        }
-        return true;
-    }
-    else
-    {
-        Console.WriteLine("Posição Inválida, pressione ENTER para continuar");
-        Console.ReadKey();
-        Console.Clear();
-        return false;
-    }
-}
-bool ValidacaoPecaVertical(string[,] tabuleiro, int colunaPeca, int linhaPeca, int tamanhoPeca, int menu)
-{
-    do
-    {
-        Console.Clear();
-        menu = 0;
-        Console.WriteLine($"Você deseja colocar seu barco na coluna {colunaPeca + 1} e qual sentido para CIMA ou BAIXO ?");
-        Console.Write("DIGITE 1 PARA CIMA OU 2 PARA BAIXO :");
-        menu = int.Parse(Console.ReadLine());
-        Console.Clear();
-    } while (menu != 1 && menu != 2);
-
-    if (ValidaEspacoVazioVertical(tabuleiro, linhaPeca, colunaPeca, tamanhoPeca, menu))
-    {
-        if (menu == 1)
-        {
-            int limiteCima = linhaPeca - tamanhoPeca;
-            for (int i = linhaPeca; i > limiteCima; i--)
-            {
-                tabuleiro[i, colunaPeca] = "x";
-            }
-
-        }
-        else
-        {
-            int limiteBaixo = linhaPeca + tamanhoPeca;
-            for (int i = linhaPeca; i < limiteBaixo; i++)
-            {
-                tabuleiro[i, colunaPeca] = "x";
             }
         }
         return true;
@@ -352,6 +353,47 @@ bool ValidaEspacoVazioHorizontal(string[,] tabuleiro, int linhaPeca, int colunaP
         }
     }
     return true;
+}
+bool ValidacaoPecaVertical(string[,] tabuleiro, int colunaPeca, int linhaPeca, int tamanhoPeca, int menu)
+{
+    do
+    {
+        Console.Clear();
+        menu = 0;
+        Console.WriteLine($"Você deseja colocar seu barco na coluna {colunaPeca + 1} e qual sentido para CIMA ou BAIXO ?");
+        Console.Write("DIGITE 1 PARA CIMA OU 2 PARA BAIXO :");
+        menu = int.Parse(Console.ReadLine());
+        Console.Clear();
+    } while (menu != 1 && menu != 2);
+
+    if (ValidaEspacoVazioVertical(tabuleiro, linhaPeca, colunaPeca, tamanhoPeca, menu))
+    {
+        if (menu == 1)
+        {
+            int limiteCima = linhaPeca - tamanhoPeca;
+            for (int i = linhaPeca; i > limiteCima; i--)
+            {
+                tabuleiro[i, colunaPeca] = "x";
+            }
+
+        }
+        else
+        {
+            int limiteBaixo = linhaPeca + tamanhoPeca;
+            for (int i = linhaPeca; i < limiteBaixo; i++)
+            {
+                tabuleiro[i, colunaPeca] = "x";
+            }
+        }
+        return true;
+    }
+    else
+    {
+        Console.WriteLine("Posição Inválida, pressione ENTER para continuar");
+        Console.ReadKey();
+        Console.Clear();
+        return false;
+    }
 }
 bool ValidaEspacoVazioVertical(string[,] tabuleiro, int linhaPeca, int colunaPeca, int tamanhoPeca, int menu)
 {
@@ -644,21 +686,21 @@ bool AtaqueJogador2(string[,] tabuleiro, string[,] marcador)
 }
 
 
-void TabuleiroComputador()
-{
-    PopulaMarcador(marcador2);
-    PopulaTabuleiro(tabuleiro2);
-    ImprimeTabuleiro(tabuleiro2);
-    LugarPecaPosicaoPecaComputador(tabuleiro2);
+//void TabuleiroComputador()
+//{
+//    PopulaMarcador(marcador2);
+//    PopulaTabuleiro(tabuleiro2);
+//    ImprimeTabuleiro(tabuleiro2);
+//    LugarPecaPosicaoPecaComputador(tabuleiro2);
 
-}
-void TabuleiroJogador()
-{
-    PopulaMarcador(marcador1);
-    PopulaTabuleiro(tabuleiro1);
-    ImprimeTabuleiro(tabuleiro1);
-    LugarPecaPosicaoPeca(tabuleiro1);
-}
+//}
+//void TabuleiroJogador()
+//{
+//    PopulaMarcador(marcador1);
+//    PopulaTabuleiro(tabuleiro1);
+//    ImprimeTabuleiro(tabuleiro1);
+//    LugarPecaPosicaoPeca(tabuleiro1);
+//}
 
 
 
