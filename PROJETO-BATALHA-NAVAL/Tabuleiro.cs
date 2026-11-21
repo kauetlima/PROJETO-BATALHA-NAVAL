@@ -1,20 +1,129 @@
 ﻿
 public class Tabuleiro
 {
-    public string[,] TabuleiroJogo { get; set; } = new string[10, 10];
-    public bool ValidaHorizontal(int tamanhoBarco,int linha,int coluna,int opcaoMenu)
+    public string[,] TabuleiroJogo { get; set; }
+    public string[,] Marcador { get; set; }
+    public int Linhas { get; }
+    public int Colunas { get; }
+
+    public Tabuleiro()
     {
+        TabuleiroJogo = new string[Linhas, Colunas];
+        Marcador = new string[Linhas, Colunas];
+    }
+
+    public void PopularTabuleiro()
+    {
+        for (int linha = 0; linha < Linhas; linha++)
+        {
+            for (int coluna = 0; coluna < Colunas; coluna++)
+            {
+                TabuleiroJogo[linha, coluna] = "~";
+            }
+        }
+    }
+
+    public void ImprimirTabuleiro()
+    {
+        for (int i = 0; i < Colunas; i++)
+        {
+            Console.Write(i + " ");
+        }
+        Console.WriteLine();
+
+        for (int linha = 0; linha < Linhas; linha++)
+        {
+            Console.Write(linha + " ");
+
+            for (int coluna = 0; coluna < Colunas; coluna++)
+            {
+                Console.Write(TabuleiroJogo[linha, coluna] + " ");
+            }
+        }
+    }
+
+    public void PopularMarcador()
+    {
+        for (int linha = 0; linha < Linhas; linha++)
+        {
+            for (int coluna = 0; coluna < Colunas; coluna++)
+            {
+                Marcador[linha, coluna] = "~";
+            }
+        }
+    }
+
+    public void ImprimirMarcador()
+    {
+        Console.Write("   ");
+        for (int coluna = 0; coluna < Colunas; coluna++)
+        {
+            Console.Write(" ");
+            Console.Write(coluna + " ");
+        }
+        Console.WriteLine();
+        for (int linha = 0; linha < Linhas; linha++)
+        {
+            Console.Write(linha + "  ");
+            for (int coluna = 0; coluna < Colunas; coluna++)
+            {
+                Console.Write($"[{Marcador[linha, coluna]}]");
+            }
+            Console.WriteLine();
+        }
+        Console.WriteLine();
+    }
+
+    public bool VerificarAtaque(int ataquelinha, int ataquecoluna)
+    {
+        if (ataquelinha < 0 || ataquelinha >= TabuleiroJogo.GetLength(0) ||
+            ataquecoluna < 0 || ataquecoluna >= TabuleiroJogo.GetLength(1))
+        {
+            return false;
+        }
+
+        if (Marcador[ataquelinha, ataquecoluna] == "X" ||
+            Marcador[ataquelinha, ataquecoluna] == "O")
+        {
+            return false;
+        }
+
+        if (TabuleiroJogo[ataquelinha, ataquecoluna] == "N")
+        {
+            Marcador[ataquelinha, ataquecoluna] = "X";
+            return true;
+        }
+        else
+        {
+            Marcador[ataquelinha, ataquecoluna] = "O";
+            return false;
+        }
+    }
+    public bool ValidaHorizontal(int tamanhoBarco, int linha, int coluna, int opcaoMenu)
+    {
+        if (linha <  0 || linha >= TabuleiroJogo.GetLength(0))
+        {
+            return false;
+        }
+        if (coluna < 0 || coluna >= TabuleiroJogo.GetLength(1))
+        {
+            return false;
+        }
 
         if (opcaoMenu == 1) //esquerda
         {
             int limiteEsquerda = coluna - tamanhoBarco;
+            if (limiteEsquerda < TabuleiroJogo.GetLength(1))
+            {
+                return false;
+            }
             for (int i = coluna; i > limiteEsquerda; i--)
             {
                 if (i >= TabuleiroJogo.GetLength(1) || i < 0)
                 {
                     return false;
                 }
-                else if (TabuleiroJogo[linha, i] == "x")
+                else if (TabuleiroJogo[linha, i] == "X")
                 {
                     return false;
                 }
@@ -23,13 +132,17 @@ public class Tabuleiro
         else //direita
         {
             int limiteDireita = coluna + tamanhoBarco;
+            if(limiteDireita > TabuleiroJogo.GetLength(1))
+            {
+                return false;
+            }
             for (int i = coluna; i < limiteDireita; i++)
             {
                 if (i >= TabuleiroJogo.GetLength(1) || i < 0)
                 {
                     return false;
                 }
-                else if (TabuleiroJogo[linha, i] == "x")
+                else if (TabuleiroJogo[linha, i] == "X")
                 {
                     return false;
                 }
@@ -40,14 +153,14 @@ public class Tabuleiro
     }
     public bool PosicionaBarcoHorizontal(int tamanhoBarco, int linha, int coluna, int opcaoMenuSentido)
     {
-        if (ValidaHorizontal( tamanhoBarco,  linha,  coluna, opcaoMenuSentido))
+        if (ValidaHorizontal(tamanhoBarco, linha, coluna, opcaoMenuSentido))
         {
             if (opcaoMenuSentido == 1)
             {
                 int limiteEsquerda = coluna - tamanhoBarco;
                 for (int i = coluna; i > limiteEsquerda; i--)
                 {
-                    TabuleiroJogo[linha, i] = "x";
+                    TabuleiroJogo[linha, i] = "X";
                 }
 
             }
@@ -56,7 +169,7 @@ public class Tabuleiro
                 int limiteDireita = coluna + tamanhoBarco;
                 for (int i = coluna; i < limiteDireita; i++)
                 {
-                    TabuleiroJogo[linha , i] = "x";
+                    TabuleiroJogo[linha, i] = "X";
                 }
             }
             return true;
@@ -100,7 +213,7 @@ public class Tabuleiro
         }
         return true;
     }
-    public bool PosicionaBarcoVertical(int tamanhoBarco, int linha, int coluna, int opcaoMenuSentido)    
+    public bool PosicionaBarcoVertical(int tamanhoBarco, int linha, int coluna, int opcaoMenuSentido)
     {
         if (ValidaVertical(tamanhoBarco, linha, coluna, opcaoMenuSentido))
         {
