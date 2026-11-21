@@ -685,6 +685,15 @@ bool AtaqueJogador2(string[,] tabuleiro, string[,] marcador)
     return false;
 }
 
+bool Jogar()
+{
+    while (true)
+    {
+        ImprimeTabuleiro(tabuleiro2);
+        AtaqueJogador1(tabuleiro2, marcador2);
+
+    }
+}
 
 //void TabuleiroComputador()
 //{
