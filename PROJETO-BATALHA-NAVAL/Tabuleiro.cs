@@ -3,8 +3,8 @@ public class Tabuleiro
 {
     public string[,] TabuleiroJogo { get; set; }
     public string[,] Marcador { get; set; }
-    public int Linhas { get; }
-    public int Colunas { get; }
+    public int Linhas { get; } = 10;
+    public int Colunas { get; } = 10;
 
     public Tabuleiro()
     {
@@ -25,6 +25,7 @@ public class Tabuleiro
 
     public void ImprimirTabuleiro()
     {
+        Console.Write("  ");
         for (int i = 0; i < Colunas; i++)
         {
             Console.Write(i + " ");
@@ -39,6 +40,7 @@ public class Tabuleiro
             {
                 Console.Write(TabuleiroJogo[linha, coluna] + " ");
             }
+            Console.WriteLine();
         }
     }
 
@@ -88,7 +90,7 @@ public class Tabuleiro
             return false;
         }
 
-        if (TabuleiroJogo[ataquelinha, ataquecoluna] == "N")
+        if (TabuleiroJogo[ataquelinha, ataquecoluna] == "X")
         {
             Marcador[ataquelinha, ataquecoluna] = "X";
             return true;
@@ -101,7 +103,7 @@ public class Tabuleiro
     }
     public bool ValidaHorizontal(int tamanhoBarco, int linha, int coluna, int opcaoMenu)
     {
-        if (linha <  0 || linha >= TabuleiroJogo.GetLength(0))
+        if (linha < 0 || linha >= TabuleiroJogo.GetLength(0))
         {
             return false;
         }
@@ -113,7 +115,7 @@ public class Tabuleiro
         if (opcaoMenu == 1) //esquerda
         {
             int limiteEsquerda = coluna - tamanhoBarco;
-            if (limiteEsquerda < TabuleiroJogo.GetLength(1))
+            if (limiteEsquerda >= 0)
             {
                 return false;
             }
@@ -132,7 +134,7 @@ public class Tabuleiro
         else //direita
         {
             int limiteDireita = coluna + tamanhoBarco;
-            if(limiteDireita > TabuleiroJogo.GetLength(1))
+            if (limiteDireita > TabuleiroJogo.GetLength(1))
             {
                 return false;
             }
@@ -181,6 +183,16 @@ public class Tabuleiro
     }
     public bool ValidaVertical(int tamanhoBarco, int linha, int coluna, int opcaoMenuSentido)
     {
+
+        if (linha < 0 || linha >= TabuleiroJogo.GetLength(0))
+        {
+            return false;
+        }
+        if (coluna < 0 || coluna >= TabuleiroJogo.GetLength(1))
+        {
+            return false;
+        }
+
         if (opcaoMenuSentido == 1) //cima
         {
             int limiteCima = linha - tamanhoBarco;
@@ -190,7 +202,7 @@ public class Tabuleiro
                 {
                     return false;
                 }
-                else if (TabuleiroJogo[i, coluna] == "x")
+                else if (TabuleiroJogo[i, coluna] == "X")
                 {
                     return false;
                 }
@@ -205,7 +217,7 @@ public class Tabuleiro
                 {
                     return false;
                 }
-                else if (TabuleiroJogo[i, coluna] == "x")
+                else if (TabuleiroJogo[i, coluna] == "X")
                 {
                     return false;
                 }
@@ -222,7 +234,7 @@ public class Tabuleiro
                 int limiteCima = linha - tamanhoBarco;
                 for (int i = linha; i > limiteCima; i--)
                 {
-                    TabuleiroJogo[i, coluna] = "x";
+                    TabuleiroJogo[i, coluna] = "X";
                 }
             }
             else
@@ -230,7 +242,7 @@ public class Tabuleiro
                 int limiteBaixo = linha + tamanhoBarco;
                 for (int i = linha; i < limiteBaixo; i++)
                 {
-                    TabuleiroJogo[i, coluna] = "x";
+                    TabuleiroJogo[i, coluna] = "X";
                 }
             }
             return true;
