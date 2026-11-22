@@ -95,6 +95,8 @@ void PosicionarBarcoJogador()
 
         int opcaoMenuSentido = 0;
         bool posicionou = false;
+        int linha;
+        int coluna;
 
         do
         {
@@ -111,11 +113,18 @@ void PosicionarBarcoJogador()
 
             MenuPosicionar menuPosicionar = new MenuPosicionar(opcaoMenu);
 
-            Console.WriteLine("Digite a linha que deseja posicionar:");
-            menuPosicionar.Linha = int.Parse(Console.ReadLine());
+            do
+            {
+                Console.WriteLine("Digite a linha (1 a 10):");
+            } while (!int.TryParse(Console.ReadLine(), out linha)|| linha < 1 || linha > 10);
 
-            Console.WriteLine("Digite a coluna que deseja posicionar:");
-            menuPosicionar.Coluna = int.Parse(Console.ReadLine());
+            do
+            {
+                Console.WriteLine("Digite a coluna (1 a 10):");
+            } while (!int.TryParse(Console.ReadLine(), out coluna)|| coluna < 1 || coluna > 10);
+
+            menuPosicionar.Linha = linha;
+            menuPosicionar.Coluna = coluna;
 
             if (opcaoMenu == 1)
             {
@@ -223,8 +232,7 @@ void Jogo(Tabuleiro tabuleiroJogo, Tabuleiro tabuleiroMaquina)
         Console.WriteLine("LINHA:");
         if (int.TryParse(Console.ReadLine(), out int posicaoLinha))
         {
-            if (posicaoLinha - 1 >= tabuleiroJogo.Linhas ||
-                posicaoLinha - 1 < 0)
+            if (posicaoLinha - 1 >= tabuleiroJogo.Linhas || posicaoLinha - 1 < 0)
             {
                 Console.WriteLine("Posição inválida!");
                 Console.ReadKey();
@@ -243,8 +251,7 @@ void Jogo(Tabuleiro tabuleiroJogo, Tabuleiro tabuleiroMaquina)
         Console.WriteLine("COLUNA:");
         if (int.TryParse(Console.ReadLine(), out int posicaoColuna))
         {
-            if (posicaoColuna - 1 >= tabuleiroJogo.Colunas ||
-                posicaoColuna - 1 < 0)
+            if (posicaoColuna - 1 >= tabuleiroJogo.Colunas || posicaoColuna - 1 < 0)
             {
                 Console.WriteLine("Posição inválida!");
                 Console.ReadKey();
@@ -261,8 +268,7 @@ void Jogo(Tabuleiro tabuleiroJogo, Tabuleiro tabuleiroMaquina)
         }
 
    
-        if (tabuleiroMaquina.Marcador[ataqueLinha, ataqueColuna] == "X" ||
-            tabuleiroMaquina.Marcador[ataqueLinha, ataqueColuna] == "O")
+        if (tabuleiroMaquina.Marcador[ataqueLinha, ataqueColuna] == "X" || tabuleiroMaquina.Marcador[ataqueLinha, ataqueColuna] == "O")
         {
             Console.WriteLine("Você já atacou essa posição!");
             Console.ReadKey();
