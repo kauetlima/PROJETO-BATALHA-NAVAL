@@ -15,23 +15,30 @@ int[] valorMenu = new int[4];
 int[,] posicaoMatriz = new int[11, 11];
 int[] teste = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
-
-
-bool jogador1 = false;
-bool jogador2 = false;
-int linhaPeca = 0;
-int colunaPeca = 0;
-int tamanhoPeca = 0;
-int menu = 0;
-int contador = 0;
-int sentidopeca = 0;
 string tipoPeca = string.Empty;
 
 
 MenuBarco menuBarco = new MenuBarco(0);
 Tabuleiro tabuleiroJogo = new Tabuleiro();
 Tabuleiro tabuleiroMaquina = new Tabuleiro();
+Tabuleiro marcadorJogador1 = new Tabuleiro();
 
+void PopulaTabuleiro(Tabuleiro tabuleiro)
+{
+    tabuleiro.PopularTabuleiro();
+}
+void PopulaMarcador(Tabuleiro marcador)
+{
+    marcador.PopularMarcador();
+}
+void ImprimeTabuleiro(Tabuleiro tabuleiro)
+{
+    tabuleiro.ImprimirTabuleiro();
+}
+void ImprimeMarcador(Tabuleiro marcador)
+{
+    marcador.ImprimirMarcador();
+}
 
 Barco MenuEscolha()
 {
@@ -64,77 +71,128 @@ Barco MenuEscolha()
 
     return barco;
 }
-
-
-for (int j = 0; j < 4; j++)
+void PosicionarBarcoJogador()
 {
-    Barco barco = MenuEscolha();
 
-    bool posicionou = false;
+    PopulaMarcador(marcadorJogador1);
+    PopulaTabuleiro(tabuleiroJogo);
 
-    do
+    for (int j = 0; j < 4; j++)
     {
-        Console.WriteLine("Deseja posicionar o barco na horizontal ou vertical ?");
-        if (int.TryParse(Console.ReadLine(), out int opcaoMenu))
+        Console.Clear();
+
+        ImprimeTabuleiro(tabuleiroJogo);
+
+        Barco barco = MenuEscolha();
+
+        if (barco == null)
         {
-            barco = menuBarco.BarcoMenu(opcaoMenu);
+            Console.WriteLine("ERRO: O barco está nulo após MenuEscolha()");
+            return;
         }
-        else
+
+        Console.WriteLine($"Barco criado com tamanho: {barco.Tamanho}");
+
+        int opcaoMenuSentido = 0;
+        bool posicionou = false;
+
+        do
         {
-            Console.WriteLine("Digite um número válido!");
-        }
+            int opcaoMenu;
+            do
+            {
+                Console.WriteLine("Deseja posicionar o barco na 1-horizontal | 2-vertical ?");
+                if (!int.TryParse(Console.ReadLine(), out opcaoMenu))
+                {
+                    Console.WriteLine("Digite um número válido!");
+                }
 
-        MenuPosicionar menuPosicionar = new MenuPosicionar(opcaoMenu);
+            } while (opcaoMenu != 1 && opcaoMenu != 2);
 
-        Console.WriteLine("Digite a linha que deseja posicionar:");
-        menuPosicionar.Linha = int.Parse(Console.ReadLine());
-        Console.WriteLine("Digite a coluna que deseja posicionar:");
-        menuPosicionar.Coluna = int.Parse(Console.ReadLine());
-        Console.WriteLine("Deseja Posicionar a peça para direita ou esquerda?");
-        int opcaoMenuSentido = int.Parse(Console.ReadLine());
+            MenuPosicionar menuPosicionar = new MenuPosicionar(opcaoMenu);
 
-        posicionou = menuPosicionar.CoordenadaPeca(barco, tabuleiroJogo, menuPosicionar, opcaoMenuSentido);
+            Console.WriteLine("Digite a linha que deseja posicionar:");
+            menuPosicionar.Linha = int.Parse(Console.ReadLine());
 
+            Console.WriteLine("Digite a coluna que deseja posicionar:");
+            menuPosicionar.Coluna = int.Parse(Console.ReadLine());
 
-        if (posicionou)
-        {
-            Console.WriteLine("Barco posicionado com sucesso!");
-        }
-        else
-        {
-            Console.WriteLine("Não foi possível posicionar o barco. Tente novamente.");
-        }
-    } while (posicionou == false);
+            if (opcaoMenu == 1)
+            {
+                Console.WriteLine("Deseja posicionar a peça para 1-esquerda | 2-direita?");
+            }
+            else if (opcaoMenu == 2)
+            {
+                Console.WriteLine("Deseja posicionar a peça 1-para cima | 2-para baixo?");
+            }
+            do
+            {
+                if (!int.TryParse(Console.ReadLine(), out opcaoMenuSentido) || (opcaoMenuSentido != 1 && opcaoMenuSentido != 2))
+                {
+                    Console.WriteLine("Opção inválida! Digite 1 ou 2:");
+                }
 
-    menuBarco.RegistrarBarco(menuBarco.OpcaoMenu);
+            } while (opcaoMenuSentido != 1 && opcaoMenuSentido != 2);
+
+            posicionou = menuPosicionar.CoordenadaPeca(barco, tabuleiroJogo, menuPosicionar, opcaoMenuSentido);
+            if (posicionou)
+            {
+                Console.WriteLine("Barco posicionado com sucesso!");
+                menuBarco.RegistrarBarco(menuBarco.OpcaoMenu);
+            }
+            else
+            {
+                Console.WriteLine("Não foi possível posicionar o barco. Tente novamente.");
+            }
+
+            Console.WriteLine("Pressione qualquer tecla para continuar...");
+            Console.ReadKey();
+            Console.Clear();
+
+        } while (posicionou == false);
+
+        Console.Clear();
+    }
 }
-
 void populaTabuleiroMaquina()
 {
     tabuleiroMaquina.PopularTabuleiro();
     tabuleiroMaquina.PopularMarcador();
+
+    MenuBarco menuBarcoMaquina = new MenuBarco(0);
+
     int i = 1;
-    while(i < 5)
+
+    while (i <= 4)
     {
-        int barco = i;
-        int linha = RandomNumberGenerator.GetInt32(0, 9);
-        int coluna = RandomNumberGenerator.GetInt32(0, 9);
-        int orientacao = RandomNumberGenerator.GetInt32(1, 2);
-        int variacao = RandomNumberGenerator.GetInt32(1, 2);
+        Barco? b = menuBarcoMaquina.BarcoMenu(i);
+
+        if (b == null)
+        {
+            return;
+        }
+
+        
+        int linha = RandomNumberGenerator.GetInt32(1, 11);
+        int coluna = RandomNumberGenerator.GetInt32(1, 11);
+        
+        int orientacao = RandomNumberGenerator.GetInt32(1, 3);
+
+        int variacao = RandomNumberGenerator.GetInt32(1, 3);
+
         MenuPosicionar p = new MenuPosicionar(orientacao);
-        Barco? b = null;
-        b = menuBarco.BarcoMenu(barco);
-        if(p.CoordenadaPeca(b, tabuleiroMaquina, p, variacao))
+
+        p.Linha = linha;
+        p.Coluna = coluna;
+
+        if (p.CoordenadaPeca(b, tabuleiroMaquina, p, variacao))
         {
             i++;
         }
-        else
-        {
-            continue;
-        }
     }
+    Console.Clear();
+    Console.WriteLine("Barcos da máquina posicionados!\n");
 }
-
 
 //Função respona
 void Jogo(Tabuleiro tabuleiroJogo, Tabuleiro tabuleiroMaquina)
@@ -146,78 +204,134 @@ void Jogo(Tabuleiro tabuleiroJogo, Tabuleiro tabuleiroMaquina)
 
     while (pontos < 14 && pontosMaquina < 14)
     {
-        Console.WriteLine("Digite a posição que você deseja atacar.");
-        Console.WriteLine("LINHA: ");
-        if(int.TryParse(Console.ReadLine(), out int posicaoLinha))
+        Console.Clear();
+        
+        ImprimeTabuleiro(tabuleiroJogo);
+        ImprimeTabuleiro(tabuleiroMaquina);
+
+        Console.WriteLine("\n====================================");
+        Console.WriteLine("           SEUS ATAQUES");
+        Console.WriteLine("====================================");
+
+        // mostra os ataques feitos contra a máquina
+        tabuleiroMaquina.ImprimirMarcador();
+
+        Console.WriteLine("X = Acerto | O = Erro | ~ = Não atacado");
+
+        Console.WriteLine("\nDigite a posição que deseja atacar.");
+
+        Console.WriteLine("LINHA:");
+        if (int.TryParse(Console.ReadLine(), out int posicaoLinha))
         {
-            if (posicaoLinha-1 > tabuleiroJogo.Linhas || posicaoLinha-1 < 0)
+            if (posicaoLinha - 1 >= tabuleiroJogo.Linhas ||
+                posicaoLinha - 1 < 0)
             {
-                Console.WriteLine("Posição sobressai do escopo, digite uma posição válida");
+                Console.WriteLine("Posição inválida!");
+                Console.ReadKey();
                 continue;
             }
-            else
-            {
-                ataqueLinha = posicaoLinha-1;
-            }
-        }
 
-        else {
-            Console.WriteLine("Digite uma posição valida");
-            continue;
-        }
-
-        Console.WriteLine("COLUNA: ");
-        if (int.TryParse(Console.ReadLine(), out int posicaoColuna))
-        {
-            if (posicaoColuna-1 > tabuleiroJogo.Colunas || posicaoColuna-1 < 0)
-            {
-                Console.WriteLine("Posição sobressai do escopo, digite uma posição válida");
-                continue;
-            }
-            else
-            {
-                ataqueColuna = posicaoColuna-1;
-            }
+            ataqueLinha = posicaoLinha - 1;
         }
         else
         {
-            Console.WriteLine("Digite uma opção valida");
+            Console.WriteLine("Digite uma posição válida!");
+            Console.ReadKey();
             continue;
         }
-        if(tabuleiroMaquina.VerificarAtaque(ataqueLinha, ataqueColuna))
+
+        Console.WriteLine("COLUNA:");
+        if (int.TryParse(Console.ReadLine(), out int posicaoColuna))
         {
-            Console.WriteLine($"Você acertou um barco na posição {ataqueLinha} {ataqueColuna}");
+            if (posicaoColuna - 1 >= tabuleiroJogo.Colunas ||
+                posicaoColuna - 1 < 0)
+            {
+                Console.WriteLine("Posição inválida!");
+                Console.ReadKey();
+                continue;
+            }
+
+            ataqueColuna = posicaoColuna - 1;
+        }
+        else
+        {
+            Console.WriteLine("Digite uma posição válida!");
+            Console.ReadKey();
+            continue;
+        }
+
+   
+        if (tabuleiroMaquina.Marcador[ataqueLinha, ataqueColuna] == "X" ||
+            tabuleiroMaquina.Marcador[ataqueLinha, ataqueColuna] == "O")
+        {
+            Console.WriteLine("Você já atacou essa posição!");
+            Console.ReadKey();
+            continue;
+        }
+
+
+        if (tabuleiroMaquina.VerificarAtaque(ataqueLinha, ataqueColuna))
+        {
+            Console.WriteLine("Você acertou um barco!");
             pontos++;
         }
         else
         {
-            Console.WriteLine("Que pena, errou.");
+            Console.WriteLine("Que pena, você errou!");
         }
-        Console.WriteLine("Vez da maquina");
 
-        tabuleiroJogo.ImprimirTabuleiro();
-        ataqueLinha = RandomNumberGenerator.GetInt32(1, 10);
-        ataqueColuna = RandomNumberGenerator.GetInt32(1, 10);
+      
+        if (pontos == 14)
+        {
+            break;
+        }
 
+        Console.WriteLine("\nVez da máquina!");
+
+        // evita que a máquina ataque uma posição repetida
+        do
+        {
+            ataqueLinha = RandomNumberGenerator.GetInt32(0, 10);
+            ataqueColuna = RandomNumberGenerator.GetInt32(0, 10);
+
+        } while (
+            tabuleiroJogo.Marcador[ataqueLinha, ataqueColuna] == "X" ||
+            tabuleiroJogo.Marcador[ataqueLinha, ataqueColuna] == "O"
+        );
+
+        // ataque da máquina
         if (tabuleiroJogo.VerificarAtaque(ataqueLinha, ataqueColuna))
         {
-            Console.WriteLine($"A maquina acertou nas coordenadas {ataqueLinha} {ataqueColuna}");
+            Console.WriteLine($"A máquina acertou na linha {ataqueLinha + 1}, coluna {ataqueColuna + 1}");
             pontosMaquina++;
         }
         else
         {
-            Console.WriteLine($"A maquina errou nas coordenadas {ataqueLinha} {ataqueColuna}");
+            Console.WriteLine($"A máquina errou na linha {ataqueLinha + 1}, coluna {ataqueColuna + 1}");
         }
+
+        Console.WriteLine("\nPressione qualquer tecla para continuar...");
+        Console.ReadKey();
     }
-    if(pontos==14)
+
+    Console.Clear();
+
+    ImprimeTabuleiro(tabuleiroJogo);
+
+
+    tabuleiroMaquina.ImprimirMarcador();
+
+    if (pontos >= 14)
     {
-        Console.WriteLine("Parabéns você ganhou!");
+        Console.WriteLine("\nParabéns, você ganhou!");
     }
-    if(pontosMaquina==14)
+    else if (pontosMaquina >= 14)
     {
-        Console.WriteLine("Que pena, você perdeu.");
+        Console.WriteLine("\nQue pena, você perdeu!");
     }
 }
 
+
+PosicionarBarcoJogador();
 populaTabuleiroMaquina();
 Jogo(tabuleiroJogo, tabuleiroMaquina);

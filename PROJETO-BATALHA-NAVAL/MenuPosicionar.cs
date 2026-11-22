@@ -11,11 +11,11 @@ public class MenuPosicionar(int opcaoMenu) : Menu(opcaoMenu)
         int linha = menuPosicionar.Linha - 1;
         int coluna = menuPosicionar.Coluna - 1;
 
-        if (opcaoMenu == 1) // Horizontal
+        if (opcaoMenu == 1) // horizontal
         {
             return tabuleiro.PosicionaBarcoHorizontal(barco.Tamanho, linha, coluna, opcaoMenuSentido);
         }
-        else if (opcaoMenu == 2) // Vertical
+        else if (opcaoMenu == 2) // vertical
         {
             return tabuleiro.PosicionaBarcoVertical(barco.Tamanho, linha, coluna, opcaoMenuSentido);
         }
