@@ -207,7 +207,7 @@ void Jogo(Tabuleiro tabuleiroJogo, Tabuleiro tabuleiroMaquina)
         Console.Clear();
         
         ImprimeTabuleiro(tabuleiroJogo);
-        ImprimeTabuleiro(tabuleiroMaquina);
+        //ImprimeTabuleiro(tabuleiroMaquina);
 
         Console.WriteLine("\n====================================");
         Console.WriteLine("           SEUS ATAQUES");
@@ -273,11 +273,13 @@ void Jogo(Tabuleiro tabuleiroJogo, Tabuleiro tabuleiroMaquina)
         if (tabuleiroMaquina.VerificarAtaque(ataqueLinha, ataqueColuna))
         {
             Console.WriteLine("Você acertou um barco!");
+            tabuleiroMaquina.TabuleiroJogo[ataqueLinha, ataqueColuna] = "X";
             pontos++;
         }
         else
         {
             Console.WriteLine("Que pena, você errou!");
+            tabuleiroMaquina.TabuleiroJogo[ataqueLinha, ataqueColuna] = "O";
         }
 
       
@@ -303,11 +305,13 @@ void Jogo(Tabuleiro tabuleiroJogo, Tabuleiro tabuleiroMaquina)
         if (tabuleiroJogo.VerificarAtaque(ataqueLinha, ataqueColuna))
         {
             Console.WriteLine($"A máquina acertou na linha {ataqueLinha + 1}, coluna {ataqueColuna + 1}");
+            tabuleiroJogo.TabuleiroJogo[ataqueLinha, ataqueColuna] = "A";
             pontosMaquina++;
         }
         else
         {
             Console.WriteLine($"A máquina errou na linha {ataqueLinha + 1}, coluna {ataqueColuna + 1}");
+            tabuleiroJogo.TabuleiroJogo[ataqueLinha, ataqueColuna] = "O";
         }
 
         Console.WriteLine("\nPressione qualquer tecla para continuar...");
